@@ -125,13 +125,16 @@ void MMBT::DFSdisplay(Vertex *V, int L)
 {   
   // V is at level L
 
-  **  // display the level and operator path that is in the node 
+  // **  // display the level and operator path that is in the node 
+  cout << "Level: " << L << V->Elem;
 
   if (L == Bottom)
       cout << "with value " << V->Value << endl;
   else{ // go down to the next level
-      **  // recursively down to left with its level (L+1) to display
-      **  // recursively down to right with its level (L+1) to display 
+      // **  // recursively down to left with its level (L+1) to display
+      DFSdisplay(V->Left, L + 1);
+      // **  // recursively down to right with its level (L+1) to display
+      DFSdisplay(V->Right, L + 1);
       }
 }//end
 
@@ -144,12 +147,24 @@ int MMBT::DFSminmax(Vertex *V, int L)
 
   if (L != Bottom ) // for an internal node
       { 
-	**  // recursively get the left value and assign it to VL
-	**  // recursively get the right value and assign it to VR
-        **  // Figure out V's value based on VL and VR
+        // **  // recursively get the left value and assign it to VL
+        VL = DFSminmax(V->Left, L + 1);
+        // **  // recursively get the right value and assign it to VR
+        VR = DFSminmax(V->Right, L + 1);
+        // **  // Figure out V's value based on VL and VR
+        if(VL > VR){
+          V->Value = VL;
+        }else{
+          V->Value = VR;
+        }
             // but it depends on whether you are at MAX or MIN
-        **  // Display the level, MAX or MIN, operator path and value
-        **  // so that the user can see how MINMAX is working
+        // **  // Display the level, MAX or MIN, operator path and value
+        if(V->Value == VL){
+          cout<< "Level " <<  L << " for MIN, " << V->Elem << " with " << VL;
+        }else{
+          cout<< "Level " <<  L << " for MAX, " << V->Elem << " with " << VR;
+        }
+        //**  // so that the user can see how MINMAX is working
        return V->Value;
     } 
     return V->Value;  // leaf is reached
