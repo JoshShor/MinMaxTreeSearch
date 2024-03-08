@@ -1,8 +1,8 @@
 // Yoshii - Minmax game tree - binary - header file
 // DO NOT CHANGE!!!!
 
-using namespace std;
 #include <string>
+using namespace std;
 
 // definition of what a Vertex (a state) is - also hidden from the client
 struct Vertex

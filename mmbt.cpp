@@ -84,24 +84,26 @@ void MMBT::DFSbuild(Vertex *V, int L, string Path)
   string Elem = Path;
   V->Elem = Elem;
 
-
+  indent(L);
 
   // **  // display the Path to show what node we are at
-  cout << "Visited: " << Elem;
+  cout << "Visited: " << Elem << endl;
 
     // when reaching the bottom, we need to get scores from the user
   if (L == Bottom)
 	  { // at bottom level 
             // ** // display the level
-            cout << "Bottom Level: " << Bottom << "\n";
+            indent(L);
+            cout << " Bottom Level: " << Bottom << " for ";
             // ** // display whether it is for MIN or MAX
             if(iseven(L)){
-              cout << "MAX";
+              cout << "MAX\n";
             }else{
-              cout << "MIN";
+              cout << "MIN\n";
             }
             // ** // ask the user to enter the score/value
-            cout << "Score for this leaf: " ; cin >> inputScore;
+            indent(L);
+            cout << " Score for this leaf: " ; cin >> inputScore;
             V->Value = inputScore;
             return;}
 	else // not a leaf so need to go down
@@ -113,9 +115,9 @@ void MMBT::DFSbuild(Vertex *V, int L, string Path)
             //**  // V->Right node should be created
             V->Right = rightNode;
 	    // **  // recursively down to left with its level and path to it
-            DFSbuild(leftNode, L, Elem);
+            DFSbuild(leftNode, L + 1, Elem + "L");
 	    // **  // recursively down to right with its level and path to it
-            DFSbuild(rightNode, L, Elem);
+            DFSbuild(rightNode, L + 1, Elem + "R");
                 // do not do L++.  L+1 is the level for the children
           }   
 }// end
@@ -124,12 +126,16 @@ void MMBT::DFSbuild(Vertex *V, int L, string Path)
 void MMBT::DFSdisplay(Vertex *V, int L)
 {   
   // V is at level L
-
+  indent(L);
   // **  // display the level and operator path that is in the node 
-  cout << "Level: " << L << V->Elem;
+  if (L == Bottom){
+    cout << " Bottom Level: " << Bottom << " " << V->Elem;
+  }  else{
+    cout << " Level: " << L << " " << V->Elem << endl;
+  }
 
   if (L == Bottom)
-      cout << "with value " << V->Value << endl;
+      cout << " with value " << V->Value << endl;
   else{ // go down to the next level
       // **  // recursively down to left with its level (L+1) to display
       DFSdisplay(V->Left, L + 1);
@@ -159,15 +165,21 @@ int MMBT::DFSminmax(Vertex *V, int L)
         }
             // but it depends on whether you are at MAX or MIN
         // **  // Display the level, MAX or MIN, operator path and value
-        if(V->Value == VL){
-          cout<< "Level " <<  L << " for MIN, " << V->Elem << " with " << VL;
-        }else{
-          cout<< "Level " <<  L << " for MAX, " << V->Elem << " with " << VR;
-        }
+          indent(L);
+          if(L == 0){
+            cout << "Level " <<  L << " for MAX, " << V->Elem << " with " << V->Value << endl;
+          }else{
+            if(V->Value == VL){
+              cout << "Level " <<  L << " for MAX, " << V->Elem << " with " << (VL) << endl;
+            }else{
+              cout << "Level " <<  L << " for MIN, " << V->Elem << " with " << (VR) << endl;
+            }
+          }
+
         //**  // so that the user can see how MINMAX is working
        return V->Value;
     } 
-    return V->Value;  // leaf is reached
+    return (V->Value) - 1;  // leaf is reached
 }//end
 
 // PURPOSE: Does Post Order traversal of the tree and deletes each vertex
@@ -181,4 +193,3 @@ void MMBT::dtraverse(Vertex *V)  // post order traversal
       delete V;                  // deletes V
     }
 }//end
-
