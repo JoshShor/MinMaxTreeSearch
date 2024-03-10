@@ -3,13 +3,6 @@
 #include <iostream>
 using namespace std;
 
-// Yoshii S24
-// Min Max binary tree implementation file
-// You must complete all ** lines
-// Use ident() to indent as I did in my output
-// Check your output against mine
-
-
 // ======== Utility Functions for Min Max ==============
 
 //to compare two state values
@@ -79,7 +72,7 @@ void MMBT::Traverse(int mode)
 void MMBT::DFSbuild(Vertex *V, int L, string Path)
 { 
   // V is at level L
-  int inputScore;
+  //int inputScore;
   //* // store the operator Path so far in V->Elem
   string Elem = Path;
   V->Elem = Elem;
@@ -92,6 +85,7 @@ void MMBT::DFSbuild(Vertex *V, int L, string Path)
     // when reaching the bottom, we need to get scores from the user
   if (L == Bottom)
 	  { // at bottom level 
+            int inputScore;
             // ** // display the level
             indent(L);
             cout << " Bottom Level: " << Bottom << " for ";
@@ -108,16 +102,16 @@ void MMBT::DFSbuild(Vertex *V, int L, string Path)
             return;}
 	else // not a leaf so need to go down
 	  {
-            Vertex *leftNode = new Vertex;
-            Vertex *rightNode = new Vertex;
+            //Vertex *leftNode = new Vertex;
+            //Vertex *rightNode = new Vertex;
             //**  // V->Left node should be created
-            V->Left = leftNode;
+            V->Left = new Vertex;
             //**  // V->Right node should be created
-            V->Right = rightNode;
+            V->Right = new Vertex;
 	    // **  // recursively down to left with its level and path to it
-            DFSbuild(leftNode, L + 1, Elem + "L");
+            DFSbuild(V->Left, L + 1, Path + "L");
 	    // **  // recursively down to right with its level and path to it
-            DFSbuild(rightNode, L + 1, Elem + "R");
+            DFSbuild(V->Right, L + 1, Path + "R");
                 // do not do L++.  L+1 is the level for the children
           }   
 }// end
@@ -147,40 +141,30 @@ void MMBT::DFSdisplay(Vertex *V, int L)
 
 // traverse depth first to do MM to assign values to internal nodes 
 int MMBT::DFSminmax(Vertex *V, int L)
-{   
-  // V is at level L
-  int VL, VR;  // child values
+{
+    // V is at level L
+    int VL, VR; // child values
 
-  if (L != Bottom ) // for an internal node
-      { 
-        // **  // recursively get the left value and assign it to VL
+    if (L != Bottom) // for an internal node
+    {
+        // recursively get the left value and assign it to VL
         VL = DFSminmax(V->Left, L + 1);
-        // **  // recursively get the right value and assign it to VR
+        // recursively get the right value and assign it to VR
         VR = DFSminmax(V->Right, L + 1);
-        // **  // Figure out V's value based on VL and VR
-        if(VL > VR){
-          V->Value = VL;
-        }else{
-          V->Value = VR;
-        }
-            // but it depends on whether you are at MAX or MIN
-        // **  // Display the level, MAX or MIN, operator path and value
-          indent(L);
-          if(L == 0){
-            cout << "Level " <<  L << " for MAX, " << V->Elem << " with " << V->Value << endl;
-          }else{
-            if(V->Value == VL){
-              cout << "Level " <<  L << " for MAX, " << V->Elem << " with " << (VL) << endl;
-            }else{
-              cout << "Level " <<  L << " for MIN, " << V->Elem << " with " << (VR) << endl;
-            }
-          }
 
-        //**  // so that the user can see how MINMAX is working
-       return V->Value;
-    } 
-    return (V->Value) - 1;  // leaf is reached
-}//end
+        // Figure out V's value based on VL and VR
+            // but it depends on whether you are at MAX or MIN
+         // Display the level, MAX or MIN, operator path and value
+       // so that the user can see how MINMAX is working
+        V->Value = (iseven(L)) ? maxof(VL, VR) : minof(VL, VR);
+
+        // Display the level, MAX or MIN, operator path, and value
+        cout << "Level: " << L << " for " << (iseven(L) ? "MAX" : "MIN") << ", " << V->Elem << " with " << V->Value << endl;
+
+        return V->Value;
+    }
+    return V->Value; // leaf is reached
+}
 
 // PURPOSE: Does Post Order traversal of the tree and deletes each vertex
 // PARAM:  pointer to the vertex to be deleted
